@@ -7,12 +7,12 @@ import java.lang.annotation.Target;
 
 /**
  * 标记在方法的参数上
- * 用于拒绝执行方法参数为null的方法，直接抛出NullParameterRefuseException异常
+ * 用于拒绝执行方法参数为null的方法，直接返回null结果。
  * @author Administrator
  *
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NullRefuse  {
+public @interface NullReturn  {
 
 }

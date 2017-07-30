@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.jason.safe_service.annotation.NullCreate;
 import com.jason.safe_service.annotation.NullRefuse;
+import com.jason.safe_service.annotation.NullReturn;
 import com.jason.safe_service.bean.ArgumentAndParameter;
 import com.jason.safe_service.exception.NullParameterRefuseException;
 
@@ -29,11 +30,13 @@ public class NullParameterAOP{
 	 * 方法签名中参数：
 	 * 		有标记NullCreate则为null传入创建新对象
 	 * 		有标记NullRefuse则为null传入抛出异常
+	 * 		有标记NullReturn则为null传入返回null结果
 	 * 这些注解使用可以自行扩展
 	 */
 	@Around("execution(@com.jason.safe_service.annotation.SafeMethod * *(..,@("
 			+ "com.jason.safe_service.annotation.NullCreate"
 			+ " || com.jason.safe_service.annotation.NullRefuse"
+			+ " || com.jason.safe_service.annotation.NullReturn"
 			+ ") (*),..))")
 	public Object serviceAOP(ProceedingJoinPoint pjp) throws Throwable {
 		
@@ -46,6 +49,11 @@ public class NullParameterAOP{
 			NullRefuse nullRefuse = aap.getParameter().getAnnotation(NullRefuse.class);
 			if (Objects.nonNull(nullRefuse)) {
 				throw new NullParameterRefuseException();
+			}
+			
+			NullReturn nullReturn = aap.getParameter().getAnnotation(NullReturn.class);
+			if (Objects.nonNull(nullReturn)) {
+				return null;
 			}
 			
 			NullCreate nullCreate = aap.getParameter().getAnnotation(NullCreate.class);
